@@ -11,6 +11,8 @@ public class UbhBulletSimpleModel3d : UbhBullet
     private Collider[] m_collider3ds = null;
     [SerializeField]
     private MeshRenderer[] m_meshRenderers = null;
+    [SerializeField]
+    private SpriteRenderer[] m_spriteRenderers = null;
 
     private bool m_isActive;
 
@@ -42,6 +44,13 @@ public class UbhBulletSimpleModel3d : UbhBullet
             for (int i = 0; i < m_meshRenderers.Length; i++)
             {
                 m_meshRenderers[i].enabled = isActive;
+            }
+        }
+        if (m_spriteRenderers != null && m_spriteRenderers.Length > 0)
+        {
+            for (int i = 0; i < m_spriteRenderers.Length; i++)
+            {
+                m_spriteRenderers[i].enabled = isActive;
             }
         }
     }

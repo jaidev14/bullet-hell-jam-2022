@@ -30,7 +30,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 400002}
-  - {fileID: 7587075126709168558}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -50,6 +49,8 @@ MonoBehaviour:
   m_collider3ds:
   - {fileID: 6217462587682441350}
   m_meshRenderers: []
+  m_spriteRenderers:
+  - {fileID: 21200000}
 --- !u!1 &100002
 GameObject:
   m_ObjectHideFlags: 0
@@ -64,6 +65,7 @@ GameObject:
   - component: {fileID: 2891411214019808104}
   - component: {fileID: 6217462587682441350}
   - component: {fileID: 3749067508781091410}
+  - component: {fileID: 3765722938681154425}
   m_Layer: 0
   m_Name: Projectile
   m_TagString: Untagged
@@ -78,14 +80,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 100002}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0.70710677, y: -0.7071069, z: -0.0000001218457, w: 0.000000052154064}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 400000}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 180, y: 0, z: 270}
 --- !u!212 &21200000
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -174,6 +176,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   _config: {fileID: 11400000, guid: c4194a9b42f66684eace2b1ac93215b3, type: 2}
+  _impactParticleSystem: {fileID: 7840584203408228716, guid: f8e990f90d8c6394c9deddfbbc20f712, type: 3}
 --- !u!135 &6217462587682441350
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -182,7 +185,7 @@ SphereCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 100002}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.25
@@ -203,46 +206,14 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!1 &3977902898813704290
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 7587075126709168558}
-  - component: {fileID: 2800938791765440716}
-  m_Layer: 0
-  m_Name: Trail
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &7587075126709168558
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3977902898813704290}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 400000}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!96 &2800938791765440716
+--- !u!96 &3765722938681154425
 TrailRenderer:
   serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3977902898813704290}
+  m_GameObject: {fileID: 100002}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -277,7 +248,7 @@ TrailRenderer:
   m_SortingLayerID: 1798612493
   m_SortingLayer: 4
   m_SortingOrder: -3
-  m_Time: 0.2
+  m_Time: 0.1
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1
@@ -286,7 +257,7 @@ TrailRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 1
+        value: 0.49659717
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -294,8 +265,8 @@ TrailRenderer:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 0.35604653
-        value: 0.5710787
+        time: 0.10335207
+        value: 0.43955594
         inSlope: -1.4744153
         outSlope: -1.4744153
         tangentMode: 0

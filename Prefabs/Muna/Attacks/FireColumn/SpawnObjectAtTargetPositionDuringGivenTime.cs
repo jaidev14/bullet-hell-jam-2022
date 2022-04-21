@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NewPlayerController : MonoBehaviour
+public class SpawnObjectAtTargetPositionDuringGivenTime : MonoBehaviour
 {
     // Start is called before the first frame update
     void Start()

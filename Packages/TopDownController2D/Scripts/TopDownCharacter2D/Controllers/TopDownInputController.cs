@@ -34,16 +34,37 @@ namespace TopDownCharacter2D.Controllers
         /// <param name="value"> The value of the input </param>
         public void OnLook(InputValue value)
         {
-            Vector2 newAim = value.Get<Vector2>();
-            if (!(newAim.normalized == newAim))
-            {
-                Vector2 worldPos = _camera.ScreenToWorldPoint(newAim);
-                newAim = (worldPos - (Vector2) transform.position).normalized;
-            }
+            // Vector2 newAim = value.Get<Vector2>();
+            // if (!(newAim.normalized == newAim))
+            // {
+            //     Vector2 worldPos = _camera.ScreenToWorldPoint(newAim);
+            //     newAim = (worldPos - (Vector2) transform.position).normalized;
+            // }
 
-            if (newAim.magnitude >= .9f)
-            {
+            // if (newAim.magnitude >= .9f)
+            // {
+            //     LookEvent.Invoke(newAim);
+            // }
+
+            Vector2 newAim = value.Get<Vector2>();
+            Plane playerPlane = new Plane(Vector3.up, transform.position);
+            Ray ray = UnityEngine.Camera.main.ScreenPointToRay(newAim);
+            float hitDist = 0.0f;
+
+            if (playerPlane.Raycast(ray, out hitDist)) {
+                Vector3 targetPoint = ray.GetPoint(hitDist) - transform.position;
+                newAim = new Vector2(targetPoint.x, targetPoint.z).normalized;
                 LookEvent.Invoke(newAim);
+
+                // if (newAim.magnitude >= .9f)
+                // {
+                // }
+
+                // Rotates object to face the mouse position
+                // Quaternion targetRotation = Quaternion.LookRotation(targetPoint - transform.position);
+                // targetRotation.x = 0;
+                // targetRotation.z = 0;
+                // playerObj.transform.rotation = Quaternion.Slerp(playerObj.transform.rotation, targetRotation, 7f * Time.deltaTime);
             }
         }
 

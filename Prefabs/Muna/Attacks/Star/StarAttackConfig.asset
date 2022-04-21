@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2aca20c846ab409baaeb6c4782674e6c, type: 3}
   m_Name: StarAttackConfig
   m_EditorClassIdentifier: 
-  size: 0.5
+  size: 2
   delay: 0
   power: 10
   speed: 0

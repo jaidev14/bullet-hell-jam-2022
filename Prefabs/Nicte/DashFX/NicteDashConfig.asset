@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5c6066b0c2bc2e4c898ad1932b144ad, type: 3}
   m_Name: NicteDashConfig
   m_EditorClassIdentifier: 
-  delay: 1.1
-  dashingTime: 0.3
+  delay: 0.9
+  dashingTime: 1
   dashSpeed: 10
   dashParticles: {fileID: 0}

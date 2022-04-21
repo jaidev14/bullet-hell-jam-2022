@@ -18,6 +18,7 @@ namespace TopDownCharacter2D
         public bool _isDashing;
 
         private Vector2 _movementDirection = Vector2.zero;
+        private Vector2 _aimingDirection = Vector2.zero;
         private Rigidbody _rb;
         private CharacterStatsHandler _stats;
         private Vector2 _dashSpeed = Vector2.zero;
@@ -33,6 +34,7 @@ namespace TopDownCharacter2D
         {
             _controller.OnMoveEvent.AddListener(Move);
             _controller.OnDashEvent.AddListener(Dash);
+            _controller.LookEvent.AddListener(OnAim);
         }
 
         private void FixedUpdate()
@@ -41,6 +43,17 @@ namespace TopDownCharacter2D
                 ApplyMovement(_movementDirection);
             } else {
                 _rb.velocity = new Vector3(_dashSpeed.x, 0, _dashSpeed.y) * 5;
+
+                // RaycastHit slash;
+                // Vector3 pre_pos = transform.position;
+                // transform.Translate(new Vector3(_dashSpeed.x, 0, _dashSpeed.y) * 5 * Time.deltaTime);
+                // if (Physics.Linecast(pre_pos, transform.position, out slash)) {
+                //     Debug.Log("HIT " + slash.collider.name);
+                //     Debug.DrawRay(pre_pos, transform.position, Color.red, 5f);
+                //     if (slash.collider.tag == "Enemy") {
+                //         Destroy(slash.collider.gameObject);
+                //     }
+                // }
             }
         }
 
@@ -63,6 +76,17 @@ namespace TopDownCharacter2D
             StartCoroutine(DashCoroutine((DashConfig) config));
         }
 
+        /// <summary>
+        ///     Changes the current direction of the aiming
+        /// </summary>
+        /// <param name="direction"></param>
+        private void OnAim(Vector2 direction)
+        {
+            Debug.Log("New aim");
+            Debug.Log(direction);
+            _aimingDirection = direction;
+        }
+
         // private void ApplyDash() {
         //     _rb.velocity = new Vector3(dashSpeed.x, _rb.velocity.y, dashSpeed.y);
         // }
@@ -73,7 +97,7 @@ namespace TopDownCharacter2D
         /// <param name="dashConfig"> The configuration for the dash</param>
         IEnumerator DashCoroutine(DashConfig dashConfig)
         {
-            _dashSpeed = _movementDirection * dashConfig.dashSpeed;
+            _dashSpeed = _aimingDirection * dashConfig.dashSpeed;
             // _rb.AddForce(new Vector3(_dashSpeed.x, 0, _dashSpeed.y), ForceMode.Impulse);
             _ghostEffect.active = true;
             _rb.velocity = Vector3.zero;

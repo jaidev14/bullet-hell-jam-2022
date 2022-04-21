@@ -13,11 +13,12 @@ namespace TopDownCharacter2D.Attacks.Range
 
         [SerializeField]
         private RangedAttackConfig _config;
-        private float _currentDuration;
-        private Vector2 _direction;
+        [SerializeField]
         private ParticleSystem _impactParticleSystem;
+        private float _currentDuration;
+        private Vector3 _direction;
         private bool _isReady;
-        private Rigidbody2D _rb;
+        private Rigidbody _rb;
         private SpriteRenderer _spriteRenderer;
         private TrailRenderer _trail;
         private ProjectileManager _projectileManager;
@@ -26,16 +27,17 @@ namespace TopDownCharacter2D.Attacks.Range
 
         private bool DestroyOnHit { get; set; } = true;
 
-        public ref Vector2 Direction => ref _direction;
+        public ref Vector3 Direction => ref _direction;
 
         private void Awake()
         {
+            _projectileManager = ProjectileManager.instance;
             _spriteRenderer = GetComponent<SpriteRenderer>();
-            _rb = GetComponent<Rigidbody2D>();
+            _rb = GetComponent<Rigidbody>();
             _trail = GetComponent<TrailRenderer>();
         }
 
-        private void OnTriggerEnter2D(Collider2D other)
+        private void OnTriggerEnter(Collider other)
         {
             if (levelCollisionLayer.value == (levelCollisionLayer.value | (1 << other.gameObject.layer)))
             {
@@ -69,11 +71,11 @@ namespace TopDownCharacter2D.Attacks.Range
         /// </summary>
         /// <param name="pos">The position where to create the particles</param>
         /// <param name="createFx">Whether to create particles or not</param>
-        private void DestroyProjectile(Vector2 pos, bool createFx)
+        private void DestroyProjectile(Vector3 pos, bool createFx)
         {
             if (createFx)
             {
-                _projectileManager.CreateImpactParticlesAtPosition(pos, _config);
+                _projectileManager.CreateImpactParticlesAtPosition(pos, _config, _impactParticleSystem);
             }
             gameObject.SetActive(false);
         }
