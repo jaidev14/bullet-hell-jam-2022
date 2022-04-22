@@ -1,7 +1,9 @@
 using TopDownCharacter2D.Controllers;
 using TopDownCharacter2D.Stats;
-using UnityEngine;
+using TopDownCharacter2D.Health;
 using System.Collections;
+using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace TopDownCharacter2D
 {
@@ -14,7 +16,8 @@ namespace TopDownCharacter2D
     public class NicteCharacterController : MonoBehaviour
     {
         private TopDownCharacterController _controller;
-        public GhostEffect _ghostEffect;
+
+        [Header("Dashing")]
         public bool _isDashing;
 
         private Vector2 _movementDirection = Vector2.zero;
@@ -22,12 +25,18 @@ namespace TopDownCharacter2D
         private Rigidbody _rb;
         private CharacterStatsHandler _stats;
         private Vector2 _dashSpeed = Vector2.zero;
+        private HealthSystem _healthSystem;
+        private bool _isDead;
+        public bool _isHurt;
+        [Range(0.0f, 1.0f)]
+        public float _speedSlowPercentage = 0.8f;
 
         private void Awake()
         {
             _controller = GetComponent<TopDownCharacterController>();
             _stats = GetComponent<CharacterStatsHandler>();
             _rb = GetComponent<Rigidbody>();
+            _healthSystem = GetComponent<HealthSystem>();
         }
 
         private void Start()
@@ -35,14 +44,20 @@ namespace TopDownCharacter2D
             _controller.OnMoveEvent.AddListener(Move);
             _controller.OnDashEvent.AddListener(Dash);
             _controller.LookEvent.AddListener(OnAim);
+            _healthSystem.OnDeath.AddListener(OnDeath);
+            _healthSystem.OnDamage.AddListener(OnDamage);
+            _healthSystem.OnInvincibilityEnd.AddListener(OnInvincibilityEnd);
         }
 
         private void FixedUpdate()
         {
+            if (_isDead) {
+                return;
+            }
             if (!_isDashing) {
                 ApplyMovement(_movementDirection);
             } else {
-                _rb.velocity = new Vector3(_dashSpeed.x, 0, _dashSpeed.y) * 5;
+                // _rb.velocity = new Vector3(_dashSpeed.x, 0, _dashSpeed.y) * 5;
 
                 // RaycastHit slash;
                 // Vector3 pre_pos = transform.position;
@@ -68,11 +83,11 @@ namespace TopDownCharacter2D
 
         private void Dash(DashConfig config)
         {
-            Debug.Log("Triggering dash");
             if (!(config is DashConfig))
             {
                 return;
             }
+            _isDashing = true;
             StartCoroutine(DashCoroutine((DashConfig) config));
         }
 
@@ -82,14 +97,8 @@ namespace TopDownCharacter2D
         /// <param name="direction"></param>
         private void OnAim(Vector2 direction)
         {
-            Debug.Log("New aim");
-            Debug.Log(direction);
             _aimingDirection = direction;
         }
-
-        // private void ApplyDash() {
-        //     _rb.velocity = new Vector3(dashSpeed.x, _rb.velocity.y, dashSpeed.y);
-        // }
 
         /// <summary>
         /// Performs a dash
@@ -97,13 +106,7 @@ namespace TopDownCharacter2D
         /// <param name="dashConfig"> The configuration for the dash</param>
         IEnumerator DashCoroutine(DashConfig dashConfig)
         {
-            _dashSpeed = _aimingDirection * dashConfig.dashSpeed;
-            // _rb.AddForce(new Vector3(_dashSpeed.x, 0, _dashSpeed.y), ForceMode.Impulse);
-            _ghostEffect.active = true;
-            _rb.velocity = Vector3.zero;
-            _isDashing = true;
             yield return new WaitForSeconds(dashConfig.dashingTime);
-            _ghostEffect.active = false;
             _isDashing = false;
         }
 
@@ -129,8 +132,36 @@ namespace TopDownCharacter2D
 
             // _rb.velocity += direction * _stats.CurrentStats.speed;
             Vector2 speed = direction * _stats.CurrentStats.speed;
+            if (_isHurt) {
+                speed = speed * _speedSlowPercentage;
+            }
 
             _rb.velocity = new Vector3(speed.x, 0, speed.y);
+        }
+
+        /// <summary>
+        /// Changes the state of the player to death
+        /// </summary>
+        private void OnDeath()
+        {
+            _rb.velocity = Vector3.zero;
+            _isDead = true;
+        }
+
+        /// <summary>
+        /// Changes the state of the player to being hurt
+        /// </summary>
+        private void OnDamage()
+        {
+            _isHurt = true;
+        }
+
+        /// <summary>
+        /// Changes the state of the player to stop being hurt
+        /// </summary>
+        private void OnInvincibilityEnd()
+        {
+            _isHurt = false;
         }
     }
 }

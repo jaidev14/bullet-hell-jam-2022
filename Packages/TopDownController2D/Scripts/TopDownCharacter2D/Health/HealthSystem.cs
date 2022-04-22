@@ -28,6 +28,9 @@ namespace TopDownCharacter2D.Health
         public float CurrentHealth { get; private set; }
 
         public float MaxHealth => _statsHandler.CurrentStats.maxHealth;
+        private bool _isDashing = false;
+        [SerializeField]
+        private TopDownDash dashController = null;
 
         private void Awake()
         {
@@ -41,6 +44,9 @@ namespace TopDownCharacter2D.Health
 
         private void Update()
         {
+            if (CurrentHealth <= 0f) {
+                return;
+            }
             if (_timeSinceLastChange < healthChangeDelay)
             {
                 _timeSinceLastChange += Time.deltaTime;

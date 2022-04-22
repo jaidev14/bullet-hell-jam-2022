@@ -18,5 +18,14 @@ namespace TopDownCharacter2D
 
         [Tooltip("The particles instantiated during the dash")]
         public ParticleSystem dashParticles;
+
+        [Tooltip("The duration of the screen shake")]
+        public float screenShakeTime;
+        [Tooltip("The amplitude of the screen shake")]
+        public float screenShakeAmplitude;
+        [Tooltip("The frequency of the screen shake")]
+        public float screenShakeFrequency;
+
+        
     }
 }

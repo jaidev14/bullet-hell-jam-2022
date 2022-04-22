@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using TopDownCharacter2D.Attacks;
+using TopDownCharacter2D;
 using TopDownCharacter2D.Controllers;
 using TopDownCharacter2D.Health;
 using TopDownCharacter2D.Items;
@@ -20,12 +21,14 @@ namespace TopDownCharacter2D.FX
 
         private HealthSystem _healthSystem;
         private PickupItem _pickup;
+        private Camera _cam;
 
         private void Awake()
         {
             _pickup = GetComponent<PickupItem>();
             _healthSystem = GetComponent<HealthSystem>();
             _controller = GetComponent<TopDownCharacterController>();
+            _cam = Camera.main;
         }
 
         private void Start()
@@ -93,6 +96,7 @@ namespace TopDownCharacter2D.FX
         /// </summary>
         /// <param name="triggerEvent"> The event who has been invoked </param>
         /// <param name="attackConfig"> The configuration of the attack </param>
+        /// <param name="dashConfig"> The configuration of the dash </param>
         private void TriggerEffects(TriggerEvents triggerEvent, AttackConfig attackConfig, DashConfig dashConfig)
         {
             foreach (Effect effect in effects)
@@ -110,6 +114,15 @@ namespace TopDownCharacter2D.FX
                 if (effect.soundEffect != null)
                 {
                     StartSoundEffect(effect.soundEffect);
+                }
+                if (effect.screenShake)
+                {
+                    if (dashConfig != null) {
+                        _cam.GetComponent<CinemachineCameraShaker>().ShakeCamera(dashConfig.screenShakeTime, dashConfig.screenShakeAmplitude, dashConfig.screenShakeFrequency);
+                    } else if (attackConfig != null) {
+                        Debug.Log("Shaky shaky");
+                        _cam.GetComponent<CinemachineCameraShaker>().ShakeCamera();
+                    }
                 }
             }
         }
@@ -135,6 +148,10 @@ namespace TopDownCharacter2D.FX
                 if (effect.soundEffect != null)
                 {
                     StartSoundEffect(effect.soundEffect);
+                }
+                if (effect.screenShake)
+                {
+                    _cam.GetComponent<CinemachineCameraShaker>().ShakeCamera();
                 }
             }
         }

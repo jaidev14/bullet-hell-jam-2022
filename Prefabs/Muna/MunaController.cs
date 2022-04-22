@@ -14,14 +14,19 @@ public class MunaController : MonoBehaviour
     private int _prevIndex = 0;
 
     [Header("AI Parameters")]
-    public MunaState state = MunaState.START;
+    [SerializeField]
+    private Transform[] attackLocations = null;
     public Vector2 moveTimeRange = new Vector2(1f, 2f);  
+    private int _nowMoveLocation = 0;
+    public float _moveSpeed = 10f;
 
-    public float startTime = 2f; 
-    public float timeBetweenAttacks = 2f;
+    public float _waitTime = 2f;
 
     public int _moveCounter = 0;
     public int _maxConsecutiveMoves = 4;
+    private bool _isActing = true;
+    public Transform _munaRenderer = null;
+    public MunaState state = MunaState.START;
 
     private void Start()
     {
@@ -34,65 +39,74 @@ public class MunaController : MonoBehaviour
         }
 
         _nowIndex = -1;
-        StartCoroutine(StartBattle());
+        state = MunaState.IDLE;
+        _isActing = false;
         ChangeShot(true);
     }
 
-    public IEnumerator StartBattle() {
-        state = MunaState.IDLE;
-        Debug.Log("Starting battle");
-        Debug.Log("Starting time " + startTime);
-
-        yield return new WaitForSeconds(startTime);
-        StartCoroutine(Attack());
+    private void Update() {
+        if (!_isActing) {
+            _isActing = true;
+            if (state == MunaState.IDLE) {
+                StartCoroutine(DecideNextAction());
+            } else if (state == MunaState.MOVE) {
+                StartCoroutine(Move());
+            } else if (state == MunaState.ATTACK) {
+                StartCoroutine(Attack());
+            }
+        } else {
+            if (state == MunaState.MOVE) {
+                float step = _moveSpeed * Time.deltaTime;
+                _munaRenderer.position = Vector3.MoveTowards(transform.position, attackLocations[_nowMoveLocation].position, step);
+            }
+        } 
     }
 
     public IEnumerator Attack() {
-        state = MunaState.ATTACK;
         Debug.Log("Attacking");
         int nextAttack = (int) Mathf.Floor(Random.Range(0, m_goShotCtrlList.Length));
         ChangeShot(true, nextAttack);
 
-        float waitTime = Random.Range(
+        _waitTime = Random.Range(
             m_goShotCtrlList[_nowIndex].GetComponent<UbhShotCtrl>().controllerMaxShootingTimeRange.x,
             m_goShotCtrlList[_nowIndex].GetComponent<UbhShotCtrl>().controllerMaxShootingTimeRange.y
         );
-        yield return new WaitForSeconds(waitTime);
-        StartCoroutine(DecideNextAction());
+        Debug.Log("Next attack:" + nextAttack);
+        Debug.Log("Wait time:" + _waitTime);
+        yield return new WaitForSeconds(_waitTime);
+        state = MunaState.IDLE;
+        _isActing = false;
     }
 
     public IEnumerator Move() {
-        state = MunaState.MOVE;
         Debug.Log("Moving");
-
-        float moveTime = Random.Range(moveTimeRange.x, moveTimeRange.y);
+        _nowMoveLocation = (int) Mathf.Floor(Random.Range(0, attackLocations.Length));
+        _waitTime = Random.Range(moveTimeRange.x, moveTimeRange.y);
         // float moveDirection = Random.insideUnitCircle.eulerAngles; // Upgrade to make intelligent nextplace choices
-        yield return new WaitForSeconds(moveTime);
-        
-        StartCoroutine(DecideNextAction());
+        yield return new WaitForSeconds(_waitTime);
+        state = MunaState.IDLE;
+        _isActing = false;
     }
 
     public IEnumerator DecideNextAction() {
-        state = MunaState.IDLE;
-        Debug.Log("Deciding next action");
-
-        // Possible actions: Move / Attack 
+        // Possible actions: Move / Attack
+        Debug.Log("Deciding");
         float nextAction = Random.Range(0, 1);
-        float attackChances = (((1 + _moveCounter) / _maxConsecutiveMoves));
+        float attackChances = 0f; // (((1 + _moveCounter) / _maxConsecutiveMoves));
 
-        float waitTime = Random.Range(
+        _waitTime = Random.Range(
             m_goShotCtrlList[_nowIndex].GetComponent<UbhShotCtrl>().controllerMaxWaitAfterTimeRange.x,
             m_goShotCtrlList[_nowIndex].GetComponent<UbhShotCtrl>().controllerMaxWaitAfterTimeRange.y
         );
-        yield return new WaitForSeconds(waitTime);
-
+        yield return new WaitForSeconds(_waitTime);
         if (nextAction <= attackChances) {
             _moveCounter = 0;
-            StartCoroutine(Attack());
+            state = MunaState.ATTACK;
         } else {
             _moveCounter++;
-            StartCoroutine(Move());
+            state = MunaState.MOVE;
         }
+        _isActing = false;
     }
 
     public void ChangeShot(bool toNext, int nextIndex = -1)

@@ -1,5 +1,6 @@
 ﻿using TopDownCharacter2D.Attacks;
 using TopDownCharacter2D.Stats;
+using TopDownCharacter2D.Health;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -15,17 +16,27 @@ namespace TopDownCharacter2D.Controllers
         protected bool IsAttacking { get; set; }
 
         private float _timeSinceLastDash = float.MaxValue;
-        protected bool IsDashing { get; set; }
+        public bool IsDashing { get; set; }
 
         protected CharacterStatsHandler Stats { get; private set; }
+        private HealthSystem _healthSystem;
+        public bool IsDead = false;
 
         protected virtual void Awake()
         {
             Stats = GetComponent<CharacterStatsHandler>();
+            _healthSystem = GetComponent<HealthSystem>();
+        }
+
+        void Start() {
+            _healthSystem.OnDeath.AddListener(HandleDeath);
         }
 
         protected virtual void Update()
         {
+            if (IsDead) {
+                return;
+            }
             HandleAttackDelay();
             HandleDashDelay();
         }
@@ -73,6 +84,16 @@ namespace TopDownCharacter2D.Controllers
                 onDashEvent.Invoke(Stats.CurrentStats.dashConfig);
             }
         }
+
+        /// <summary>
+        ///     Changes the current direction of the aiming
+        /// </summary>
+        /// <param name="direction"></param>
+        private void HandleDeath()
+        {
+            IsDead = true;
+        }
+
 
         #region Events
 

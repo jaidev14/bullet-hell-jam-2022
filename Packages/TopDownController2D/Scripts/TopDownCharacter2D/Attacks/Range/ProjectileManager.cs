@@ -33,13 +33,7 @@ namespace TopDownCharacter2D.Attacks.Range
                 mainModule.startSpeedMultiplier = config.size * 10f;
                 impactParticleSystem.Play();
             } else {
-                Debug.Log("Ole");
                 ParticleSystem particles = Instantiate(impactParticleSystem, position, Quaternion.identity, transform);
-                // ParticleSystem.EmissionModule em = particles.emission;
-                // em.SetBurst(0, new ParticleSystem.Burst(0, Mathf.Ceil(config.size * 5f)));
-                // ParticleSystem.MainModule mainModule = particles.main;
-                // mainModule.startSpeedMultiplier = config.size * 10f;
-                // impactParticleSystem.Play();
             }
         }
 

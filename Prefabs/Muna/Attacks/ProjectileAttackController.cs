@@ -78,6 +78,7 @@ namespace TopDownCharacter2D.Attacks.Range
                 _projectileManager.CreateImpactParticlesAtPosition(pos, _config, _impactParticleSystem);
             }
             gameObject.SetActive(false);
+            _trail.emitting = false;
         }
     }
 }

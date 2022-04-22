@@ -1,37 +1,48 @@
-﻿using TopDownCharacter2D.Health;
+using TopDownCharacter2D;
+using TopDownCharacter2D.Health;
 using UnityEngine;
 
 namespace TopDownController2D.Scripts.TopDownCharacter2D.Animations
 {
-    public class SampleCharacterAnimation : TopDownAnimations
+    public class NicteCharacterAnimations : TopDownAnimations
     {
         private static readonly int IsWalking = Animator.StringToHash("IsWalking");
         private static readonly int Attack = Animator.StringToHash("Attack");
         private static readonly int IsDashing = Animator.StringToHash("IsDashing");
         private static readonly int IsHurt = Animator.StringToHash("IsHurt");
+        private static readonly int IsDead = Animator.StringToHash("IsDead");
         [SerializeField] private bool facingRight = true;
         
         [SerializeField] private bool createDustOnWalk = true;
         [SerializeField] private ParticleSystem dustParticleSystem;
         
+        private TopDownDash _dashController = null;
         private HealthSystem _healthSystem;
+        private bool _isDead = false;
+        protected Quaternion _initialRotation;
         
         protected override void Awake()
         {
             base.Awake();
             _healthSystem = GetComponent<HealthSystem>();
+            _dashController = GetComponent<TopDownDash>();
+            _initialRotation = this.transform.rotation;
         }
 
         protected void Start()
         {
             controller.OnAttackEvent.AddListener(_ => Attacking());
-            controller.OnDashEvent.AddListener(_ => Dashing());
             controller.OnMoveEvent.AddListener(Move);
+            if (_dashController != null)
+            {
+                _dashController.IsDashing.AddListener(Dashing);
+            }
 
             if (_healthSystem != null)
             {
                 _healthSystem.OnDamage.AddListener(Hurt);
                 _healthSystem.OnInvincibilityEnd.AddListener(InvincibilityEnd);
+                _healthSystem.OnDeath.AddListener(Death);
             }
         }
 
@@ -41,6 +52,9 @@ namespace TopDownController2D.Scripts.TopDownCharacter2D.Animations
         /// <param name="movementDirection"> The new movement direction </param>
         private void Move(Vector2 movementDirection)
         {
+            if (_isDead) {
+                return;
+            }
             animator.SetBool(IsWalking, movementDirection.magnitude > .5f);
             if (movementDirection.x > 0 && !facingRight) {
                 Flip();
@@ -85,19 +99,25 @@ namespace TopDownController2D.Scripts.TopDownCharacter2D.Animations
         }
 
         /// <summary>
-        ///     To call when the character dashes
+        /// To call when the character dies
         /// </summary>
-        private void Dashing()
+        public void Death()
         {
-            // animator.SetBool(IsDashing, true);
+            _isDead = true;
+            animator.SetBool(IsDead, true);
         }
 
         /// <summary>
-        ///     To call when the character ends its dash time
+        ///     To call when the character dashes
         /// </summary>
-        public void DashEnd()
+        private void Dashing(bool isDashing)
         {
-            // animator.SetBool(IsDashing, false);
+            animator.SetBool(IsDashing, isDashing);
+            if (isDashing) {
+                animator.transform.rotation = Quaternion.Euler(_initialRotation.x, _initialRotation.y, facingRight ? -45 : 45);
+            } else {
+                animator.transform.rotation = Quaternion.Euler(_initialRotation.x, _initialRotation.y, _initialRotation.z);
+            }
         }
 
         /// <summary>
