@@ -11,6 +11,7 @@ using UnityEngine.Serialization;
 [AddComponentMenu("UniBulletHell/Controller/Shot Controller")]
 public sealed class UbhShotCtrl : UbhMonoBehaviour
 {
+    public int attackAnimationIndex = 0;
     public Vector2 controllerMaxShootingTimeRange = new Vector2(1f, 5f);
     public Vector2 controllerMaxWaitAfterTimeRange = new Vector2(1f, 3f);
 

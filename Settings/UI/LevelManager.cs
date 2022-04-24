@@ -6,19 +6,12 @@ public class LevelManager : MonoBehaviour
 {
     public static LevelManager Instance{set;get;}
 
-    public float time = 0;
-    public int score = 0;
-    private int deaths = 0;
+    private float time = 0;
+    private int killedShadows = 0;
 
-    [SerializeField] private Transform spawnPosition = null;
-    [SerializeField] private GameObject playerPrefab = null;
     // public FadeController blackScreen = null;
-    public GameObject curPlayer = null;
+    private bool levelActive = false;
 
-    public bool levelActive = false;
-
-    GameObject[] coinSpawners = null;
-    GameObject[] switchs = null;
 
     void Awake() {
         Instance = this;
@@ -36,47 +29,47 @@ public class LevelManager : MonoBehaviour
 
     public void StartLevel() {
         time = 0f;
+        killedShadows = 0;
         StartCoroutine(StartLevelCoroutine());
     }
 
-    public void Lose() {
-        StartCoroutine(LoseCoroutine());
+    public void Die() {
+        Debug.Log("Dying");
+        StartCoroutine(DieCoroutine());
     }
 
     public void Win() {
-        GameManager.Instance.time += time;
-        GameManager.Instance.score += score;
-        GameManager.Instance.deaths += deaths;
+        GameManager.Instance.time = time;
+        GameManager.Instance.killedShadows = killedShadows;
+        GameManager.Instance.deaths++;
 
-        // blackScreen.FadeIn(1f);
         StartCoroutine(WinFadeIn());
-    }
-
-    public void AddScore(int otherScore) {
-        score += otherScore;
     }
 
     public void IsActive(bool active) {
         levelActive = active;
     }
 
-    IEnumerator LoseCoroutine() {
+    IEnumerator DieCoroutine() {
         levelActive = false;
-        AudioManager.StopMusicAudio();
+        GameManager.Instance.time = time;
+        GameManager.Instance.killedShadows = killedShadows;
+        GameManager.Instance.deaths += 1;
+        // AudioManager.StopMusicAudio();
         yield return new WaitForSeconds(0.5f);
-
-        Destroy(curPlayer);
+        GameManager.Instance.EndGame();
     }
 
     IEnumerator StartLevelCoroutine() {
-        levelActive = true;
-        AudioManager.StartLevelAudio();
+        // AudioManager.StartLevelAudio();
         yield return new WaitForSeconds(0.5f);
+        levelActive = true;
     }
 
     IEnumerator WinFadeIn() {
         levelActive = false;
-        AudioManager.StopMusicAudio();
+        // AudioManager.StopMusicAudio();
         yield return new WaitForSeconds(0.5f);
+        GameManager.Instance.EndGame();
     }
 }

@@ -5,22 +5,18 @@ using UnityEngine;
 [System.Serializable]
 public class GameStat {
         public float time;
-        public int score;
+        public int killedShadows;
         public int deaths;
-        public int end;
-        // 0 - Pacifist, 1 - Assassin, 2 - Mediocre, 3 - Genocide
 
         public GameStat() {
             this.deaths = 0;
-            this.score = 0;
+            this.killedShadows = 0;
             this.time = 0;
-            this.end = 0;
         }
 
-        public GameStat(float time, int score, int deaths, int end) {
+        public GameStat(float time, int killedShadows, int deaths) {
             this.time = time;
-            this.score = score;
+            this.killedShadows = killedShadows;
             this.deaths = deaths;
-            this.end = end;
         }
 }

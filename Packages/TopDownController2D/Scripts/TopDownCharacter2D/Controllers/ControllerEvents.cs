@@ -23,4 +23,9 @@ namespace TopDownCharacter2D.Controllers
     ///     An event representing a look input (where the character must look) in the direction of its parameter
     /// </summary>
     public class LookEvent : UnityEvent<Vector2> { }
+
+    /// <summary>
+    ///     An event representing a pause input
+    /// </summary>
+    public class PauseEvent : UnityEvent<bool> { }
 }

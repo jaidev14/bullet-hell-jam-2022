@@ -180,14 +180,17 @@ public class AudioManager : MonoBehaviour
     }
 
     // ----------------------  INTERACTIONS SOURCE  ----------------------
-    public static void PlayButtonClickAudio()
+    public static void PlayButtonClickAudio(AudioClip clickClip = null)
     {
+        if (clickClip == null) {
+            clickClip = current.buttonClickClip;
+        }
         //If there is no current AudioManager, exit
         if (current == null)
             return;
 
         //Set the level reload sting clip and tell the source to play
-        current.interactionsSource.clip = current.buttonClickClip;
+        current.interactionsSource.clip = clickClip;
         current.interactionsSource.Play();
     }
 

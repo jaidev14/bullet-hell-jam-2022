@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class FireColumnAttackController : MonoBehaviour
 {
+    public int attackAnimationIndex = 0;
     private enum AttackType {
         HOMING,
         CROSS,
@@ -12,6 +13,7 @@ public class FireColumnAttackController : MonoBehaviour
     }
 
     public GameObject _fireColumnPrefab;
+    private List<GameObject> _fireColumnPool = null;
     public float _betweenAttacksDelay;
     public float _totalAttackTime;
     public Vector3 _spawnOffset;
@@ -33,6 +35,10 @@ public class FireColumnAttackController : MonoBehaviour
     public bool _isAttacking;
     private Vector3 currentPosition;
 
+    void Start() {
+        _fireColumnPool = new List<GameObject>();
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -44,7 +50,9 @@ public class FireColumnAttackController : MonoBehaviour
         if (_isAttacking) {
             if (_nextAttackTime <= 0) {
                 _nextAttackTime = _betweenAttacksDelay;
-                GameObject newAttack = Instantiate(_fireColumnPrefab, _targetTransform.position - _spawnOffset, Quaternion.identity, this.transform);
+                Vector3 _spawnOffsetPosition = new Vector3(Random.Range(-_spawnOffset.x, _spawnOffset.x), _spawnOffset.y, Random.Range(-_spawnOffset.z, _spawnOffset.z));
+                GameObject newAttack = Instantiate(_fireColumnPrefab, _targetTransform.position + _spawnOffsetPosition, Quaternion.identity, this.transform);
+                _fireColumnPool.Add(newAttack);
                 _currentSpawnedAttacks++;
             } else {
                 _nextAttackTime -= Time.deltaTime;
@@ -52,15 +60,32 @@ public class FireColumnAttackController : MonoBehaviour
         }
     }
 
-    void StartAttack() {
+    public void StartAttack() {
         _currentSpawnedAttacks = 0;
         _nextAttackTime = _betweenAttacksDelay;
+        if (_fireColumnPool != null && _fireColumnPool.Count >= 1) {
+            foreach(GameObject fireColumn in _fireColumnPool) {
+                Destroy(fireColumn);
+            }
+        }
+        _fireColumnPool = new List<GameObject>();
         StartCoroutine(AttackCoroutine());
+    }
+
+    public void FinishAttack() {
+        _currentSpawnedAttacks = 0;
+        _isAttacking = false;
+        if (_fireColumnPool != null && _fireColumnPool.Count >= 1) {
+            foreach(GameObject fireColumn in _fireColumnPool) {
+                Destroy(fireColumn);
+            }
+        }
+        _fireColumnPool = new List<GameObject>();
     }
 
     IEnumerator AttackCoroutine() {
         _isAttacking = true;
         yield return new WaitForSeconds(_totalAttackTime);
-        _isAttacking = false;
+        FinishAttack();
     }
 }

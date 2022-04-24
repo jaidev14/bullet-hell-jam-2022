@@ -24,6 +24,10 @@ namespace TopDownCharacter2D.Controllers
         /// <param name="value"> The value of the input </param>
         public void OnMove(InputValue value)
         {
+            if (IsDead) {
+                OnMoveEvent.Invoke(Vector2.zero);
+                return;
+            }
             Vector2 moveInput = value.Get<Vector2>().normalized;
             OnMoveEvent.Invoke(moveInput);
         }
@@ -45,7 +49,9 @@ namespace TopDownCharacter2D.Controllers
             // {
             //     LookEvent.Invoke(newAim);
             // }
-
+            if (IsDead) {
+                return;
+            }
             Vector2 newAim = value.Get<Vector2>();
             Plane playerPlane = new Plane(Vector3.up, transform.position);
             Ray ray = UnityEngine.Camera.main.ScreenPointToRay(newAim);
@@ -74,6 +80,10 @@ namespace TopDownCharacter2D.Controllers
         /// <param name="value"> The value of the input </param>
         public void OnFire(InputValue value)
         {
+            if (IsDead) {
+                IsAttacking = false;
+                return;
+            }
             IsAttacking = value.isPressed;
         }
 
@@ -83,6 +93,10 @@ namespace TopDownCharacter2D.Controllers
         /// <param name="value"> The value of the input </param>
         public void OnDash(InputValue value)
         {
+            if (IsDead) {
+                IsDashing = false;
+                return;
+            }
             IsDashing = value.isPressed;
         }
 

@@ -19,14 +19,13 @@ namespace TopDownController2D.Scripts.TopDownCharacter2D.Animations
         private TopDownDash _dashController = null;
         private HealthSystem _healthSystem;
         private bool _isDead = false;
-        protected Quaternion _initialRotation;
+        protected Vector3 _initialRotation = new Vector3 (0, 0, 0);
         
         protected override void Awake()
         {
             base.Awake();
             _healthSystem = GetComponent<HealthSystem>();
             _dashController = GetComponent<TopDownDash>();
-            _initialRotation = this.transform.rotation;
         }
 
         protected void Start()
@@ -52,7 +51,7 @@ namespace TopDownController2D.Scripts.TopDownCharacter2D.Animations
         /// <param name="movementDirection"> The new movement direction </param>
         private void Move(Vector2 movementDirection)
         {
-            if (_isDead) {
+            if (_isDead || PauseManager.Instance.IsPaused) {
                 return;
             }
             animator.SetBool(IsWalking, movementDirection.magnitude > .5f);
@@ -60,6 +59,9 @@ namespace TopDownController2D.Scripts.TopDownCharacter2D.Animations
                 Flip();
             } else if (movementDirection.x < 0 && facingRight) {
                 Flip();
+            }
+            if (movementDirection.magnitude > .5f) {
+                CreateDustParticles();
             }
         }
 
@@ -127,7 +129,6 @@ namespace TopDownController2D.Scripts.TopDownCharacter2D.Animations
         {
             if (createDustOnWalk)
             {
-                dustParticleSystem.Stop();
                 dustParticleSystem.Play();
             }
         }

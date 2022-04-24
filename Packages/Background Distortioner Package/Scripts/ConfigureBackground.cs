@@ -36,8 +36,9 @@ public class ConfigureBackground : MonoBehaviour
     [Tooltip("Use this to adjust the blend mode of this layer")]
     [StringInList("Traditional","Premultiplied","Additive","Soft-Additive","Multiplicative","2x-Multiplicative")] public string typeOfBlend = "Traditional";
 
-    private int blendSrc = 0;
-    private int blendDst = 0;
+    // --- COMMENTED TO AVOID CONSOLE WARNING ---  
+    // private int blendSrc = 0;
+    // private int blendDst = 0;
     
     /// Represents the speed at which the palette shifts, bigger values than 100 are unnoticable.
     [Tooltip("Use this to adjust speed of distortion")]

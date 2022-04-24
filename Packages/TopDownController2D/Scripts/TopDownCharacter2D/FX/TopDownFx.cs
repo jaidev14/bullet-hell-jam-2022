@@ -5,7 +5,6 @@ using TopDownCharacter2D;
 using TopDownCharacter2D.Controllers;
 using TopDownCharacter2D.Health;
 using TopDownCharacter2D.Items;
-using TopDownCharacter2D;
 using UnityEngine;
 using UnityEngine.Events;
 

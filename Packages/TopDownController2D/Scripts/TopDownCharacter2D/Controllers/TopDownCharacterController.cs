@@ -21,6 +21,7 @@ namespace TopDownCharacter2D.Controllers
         protected CharacterStatsHandler Stats { get; private set; }
         private HealthSystem _healthSystem;
         public bool IsDead = false;
+        public bool IsPaused { get; set; }
 
         protected virtual void Awake()
         {
@@ -34,9 +35,6 @@ namespace TopDownCharacter2D.Controllers
 
         protected virtual void Update()
         {
-            if (IsDead) {
-                return;
-            }
             HandleAttackDelay();
             HandleDashDelay();
         }

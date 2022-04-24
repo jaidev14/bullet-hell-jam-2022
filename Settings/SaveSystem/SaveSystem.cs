@@ -31,7 +31,7 @@ public class SaveSystem: MonoBehaviour {
         string directoryName = "games";
         CheckForDirectory("game_save/game_stats_data/" + directoryName);
 
-        string filePath = Application.persistentDataPath + "/game_save/game_stats_data/" + directoryName + "/game" + gameStat.end + ".jai";
+        string filePath = Application.persistentDataPath + "/game_save/game_stats_data/" + directoryName + "/game.jai";
         GameStat data = gameStat;
 
         if (File.Exists(filePath)) {
@@ -80,23 +80,14 @@ public class SaveSystem: MonoBehaviour {
             return currentGameStat;
         }
 
-        GameStat bestGameStat = new GameStat();
-        foreach (GameStat gS in sessionSavedGameStats) {
-            if (gS.end == currentGameStat.end)
-                bestGameStat = gS;
-        }
-        GameStat resultingGameStat = bestGameStat;
+        GameStat bestGameStat = sessionSavedGameStats[0];
+        GameStat resultingGameStat = currentGameStat;
         if (bestGameStat.time == 0) {
             return currentGameStat;
         }
 
-        resultingGameStat.deaths = bestGameStat.deaths < currentGameStat.deaths ? bestGameStat.deaths : currentGameStat.deaths; 
         resultingGameStat.time = bestGameStat.time < currentGameStat.time ? bestGameStat.time : currentGameStat.time; 
-        resultingGameStat.score = bestGameStat.score > currentGameStat.score ? bestGameStat.score : currentGameStat.score; 
-        
-        sessionSavedGameStats.RemoveAll(s => s.end == resultingGameStat.end);
         sessionSavedGameStats.Add(resultingGameStat);
-        
         return resultingGameStat;
     }
 }

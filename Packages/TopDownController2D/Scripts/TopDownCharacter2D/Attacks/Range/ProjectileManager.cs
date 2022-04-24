@@ -25,13 +25,13 @@ namespace TopDownCharacter2D.Attacks.Range
         public void CreateImpactParticlesAtPosition(Vector3 position, RangedAttackConfig config, ParticleSystem impactParticleSystem = null)
         {
             if (impactParticleSystem == null) {
-                impactParticleSystem = _impactParticleSystem;
-                impactParticleSystem.transform.position = position;
-                ParticleSystem.EmissionModule em = impactParticleSystem.emission;
-                em.SetBurst(0, new ParticleSystem.Burst(0, Mathf.Ceil(config.size * 5f)));
-                ParticleSystem.MainModule mainModule = impactParticleSystem.main;
-                mainModule.startSpeedMultiplier = config.size * 10f;
-                impactParticleSystem.Play();
+                // impactParticleSystem = _impactParticleSystem;
+                // impactParticleSystem.transform.position = position;
+                // ParticleSystem.EmissionModule em = impactParticleSystem.emission;
+                // em.SetBurst(0, new ParticleSystem.Burst(0, Mathf.Ceil(config.size * 5f)));
+                // ParticleSystem.MainModule mainModule = impactParticleSystem.main;
+                // mainModule.startSpeedMultiplier = config.size * 10f;
+                // impactParticleSystem.Play();
             } else {
                 ParticleSystem particles = Instantiate(impactParticleSystem, position, Quaternion.identity, transform);
             }

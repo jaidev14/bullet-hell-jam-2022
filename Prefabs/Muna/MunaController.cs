@@ -27,6 +27,7 @@ public class MunaController : MonoBehaviour
     private bool _isActing = true;
     public Transform _munaRenderer = null;
     public MunaState state = MunaState.START;
+    public FireColumnAttackController _fireColumnAttackController;
 
     private void Start()
     {
@@ -38,10 +39,9 @@ public class MunaController : MonoBehaviour
             }
         }
 
-        _nowIndex = -1;
+        _nowIndex = 0;
         state = MunaState.IDLE;
         _isActing = false;
-        ChangeShot(true);
     }
 
     private void Update() {
@@ -64,8 +64,12 @@ public class MunaController : MonoBehaviour
 
     public IEnumerator Attack() {
         Debug.Log("Attacking");
-        int nextAttack = (int) Mathf.Floor(Random.Range(0, m_goShotCtrlList.Length));
-        ChangeShot(true, nextAttack);
+        int nextAttack = (int) Mathf.Floor(Random.Range(0, m_goShotCtrlList.Length + 1));
+        if (nextAttack == m_goShotCtrlList.Length) {
+            _fireColumnAttackController.StartAttack();
+        } else {
+            ChangeShot(true, nextAttack);
+        }
 
         _waitTime = Random.Range(
             m_goShotCtrlList[_nowIndex].GetComponent<UbhShotCtrl>().controllerMaxShootingTimeRange.x,
@@ -115,8 +119,6 @@ public class MunaController : MonoBehaviour
         {
             return;
         }
-
-        StopAllCoroutines();
 
         if (0 <= _nowIndex && _nowIndex < m_goShotCtrlList.Length)
         {

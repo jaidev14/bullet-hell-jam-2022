@@ -1,61 +1,71 @@
-﻿// using System.Collections;
-// using System.Collections.Generic;
-// using TMPro;
-// using UnityEngine;
-// using UnityEngine.UI;
+﻿using System.Collections;
+using System.Collections.Generic;
+using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.InputSystem;
 
-// public class PauseManager : MonoBehaviour
-// {
-//     public static PauseManager Instance{set;get;}
+public class PauseManager : MonoBehaviour
+{
+    public static PauseManager Instance{set;get;}
+    [SerializeField] private GameObject pausePanel = null;
+    public bool IsPaused = false;
 
-//     [SerializeField] private TMP_Text scoreText = null;
-//     [SerializeField] private TMP_Text timeText = null;
+    void Awake() {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
 
-//     [SerializeField] private GameObject pausePanel = null;
-//     public bool paused = false;
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+    }
 
-//     void Start() {
-//         pausePanel.SetActive(false);
-//         paused = false;
-//         Time.timeScale = 1f;
-//     }
+    void Start() {
+        pausePanel.SetActive(false);
+        IsPaused = false;
+        Time.timeScale = 1f;
+    }
 
-//     void Update() {
-//         if (Input.GetButtonDown("Cancel"))
-//         {
-//             TogglePause();
-//         }
-//     }
+    /// <summary>
+    ///     Method called when the user enters a pause input
+    /// </summary>
+    public void OnPause(InputValue value)
+    {
+        if (value.isPressed) {
+            TogglePause();
+        }
+    }
 
-//     public void TogglePause() {
-//         if (paused) {
-//             paused = false;
-//             Time.timeScale = 1f;
-//         } else {
-//             paused = true;
-//             Time.timeScale = 0f;
-//             scoreText.text = LevelManager.Instance.score.ToString();
-//             timeText.text = GetTime(LevelManager.Instance.time);
-//         }
-//         pausePanel.SetActive(paused);
-//         LevelManager.Instance.SetIsActive(!paused);
-//     }
+    public void TogglePause() {
+        if (IsPaused) {
+            IsPaused = false;
+            Time.timeScale = 1f;
+        } else {
+            IsPaused = true;
+            Time.timeScale = 0f;
+        }
+        pausePanel.SetActive(IsPaused);
+    }
 
-//     public void RestartGame() {
-//         if (paused) {
-//             TogglePause();
-//             LevelManager.Instance.RestartLevel();
-//         }
-//     }
+    public void Continue() {
+        if (IsPaused) { 
+            TogglePause();
+        }
+    }
 
-//     public void BackToMenu() {
-//         GameManager.Instance.BackToMenu();
-//     }
+    public void OpenSettings() {
+    }
 
-//     private string GetTime(float time) {
-//         int minutes = (int) Mathf.Floor(time / 60);
-//         int seconds = (int) (time % 60);
-//         int milliseconds = (int) (time * 1000f) % 1000;
-//         return minutes.ToString ("D2") + ":" + seconds.ToString ("D2") + "." + milliseconds.ToString("D2");
-//     }
-// }
+    public void BackToMenu() {
+        GameManager.Instance.BackToMenu();
+    }
+
+    private string GetTime(float time) {
+        int minutes = (int) Mathf.Floor(time / 60);
+        int seconds = (int) (time % 60);
+        int milliseconds = (int) (time * 1000f) % 1000;
+        return minutes.ToString ("D2") + ":" + seconds.ToString ("D2") + "." + milliseconds.ToString("D2");
+    }
+}

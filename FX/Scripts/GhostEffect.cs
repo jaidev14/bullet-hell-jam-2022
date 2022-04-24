@@ -13,7 +13,7 @@ public class GhostEffect : MonoBehaviour {
     {
         if (active) {
             GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 0);
-            currentGhostDelay -= Time.deltaTime;
+            currentGhostDelay -= Time.fixedDeltaTime;
             if (currentGhostDelay <= 0) {
                 GameObject currentGhost = Instantiate(ghostPrefab, transform.position, transform.rotation);
                 currentGhost.transform.localScale = transform.localScale;

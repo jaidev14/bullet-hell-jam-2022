@@ -22,10 +22,12 @@ namespace TopDownCharacter2D.Attacks.Range
         private SpriteRenderer _spriteRenderer;
         private TrailRenderer _trail;
         private ProjectileManager _projectileManager;
+        [SerializeField]
 
         private bool fxOnDestroy = true;
+        [SerializeField]
 
-        private bool DestroyOnHit { get; set; } = true;
+        private bool DestroyOnHit = true;
 
         public ref Vector3 Direction => ref _direction;
 
@@ -48,6 +50,16 @@ namespace TopDownCharacter2D.Attacks.Range
             }
             else if (_config.target.value == (_config.target.value | (1 << other.gameObject.layer)))
             {
+                TopDownDash dashController = other.gameObject.GetComponent<TopDownDash>();
+                if (dashController != null && dashController._isDashing) {
+                    // Do cool shit like absorb projectiles
+                    DestroyProjectile(other.ClosestPoint(transform.position), fxOnDestroy);
+                }
+
+                if (other.gameObject.tag == "Aura") {
+                    DestroyProjectile(other.ClosestPoint(transform.position), fxOnDestroy);
+                }
+
                 HealthSystem health = other.gameObject.GetComponent<HealthSystem>();
                 if (health != null)
                 {
@@ -78,7 +90,9 @@ namespace TopDownCharacter2D.Attacks.Range
                 _projectileManager.CreateImpactParticlesAtPosition(pos, _config, _impactParticleSystem);
             }
             gameObject.SetActive(false);
-            _trail.emitting = false;
+            if (_trail != null) {
+                _trail.emitting = false;
+            }
         }
     }
 }

@@ -28,9 +28,6 @@ namespace TopDownCharacter2D.Health
         public float CurrentHealth { get; private set; }
 
         public float MaxHealth => _statsHandler.CurrentStats.maxHealth;
-        private bool _isDashing = false;
-        [SerializeField]
-        private TopDownDash dashController = null;
 
         private void Awake()
         {
