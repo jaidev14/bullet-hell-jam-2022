@@ -2,7 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.Serialization;
 using UnityEngine;
-
+using TopDownCharacter2D;
+using TopDownCharacter2D.Health;
+using TopDownCharacter2D.Attacks.Range;
 public class FireColumnAttackController : MonoBehaviour
 {
     public int attackAnimationIndex = 0;
@@ -63,12 +65,6 @@ public class FireColumnAttackController : MonoBehaviour
     public void StartAttack() {
         _currentSpawnedAttacks = 0;
         _nextAttackTime = _betweenAttacksDelay;
-        if (_fireColumnPool != null && _fireColumnPool.Count >= 1) {
-            foreach(GameObject fireColumn in _fireColumnPool) {
-                Destroy(fireColumn);
-            }
-        }
-        _fireColumnPool = new List<GameObject>();
         StartCoroutine(AttackCoroutine());
     }
 

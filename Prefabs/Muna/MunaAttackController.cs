@@ -11,6 +11,18 @@ public class MunaAttackController : MonoBehaviour
     public int _curAttackAnimationIndex = 0;
 
     private void Start() {
+        _nowIndex = 0;
+        _curAttack = attackList[_nowIndex];
+    }
+
+    void Update() {
+        if (!LevelManager.Instance.levelActive) {
+            StopAllAttacks();
+            return;
+        }
+    }
+
+    void StopAllAttacks() {
         if (attackList != null)
         {
             for (int i = 0; i < attackList.Length; i++)
@@ -25,29 +37,26 @@ public class MunaAttackController : MonoBehaviour
                 }
             }
         }
-
-        _nowIndex = 0;
-        _curAttack = attackList[_nowIndex];
     }
 
     public void Attack(int nextIndex = 0) {
         if (attackList != null && 0 <= nextIndex && nextIndex < attackList.Length)
         {
-            Debug.Log("Attacking" + nextIndex);
             _prevIndex = _nowIndex;
-
             _nowIndex = nextIndex;
             _curAttack = attackList[_nowIndex];
 
             UbhShotCtrl shotCtrl = _curAttack.GetComponent<UbhShotCtrl>();
             if (shotCtrl != null)
             {
-                Debug.Log("Shot");
+                if (shotCtrl.m_shooting) {
+                    shotCtrl.StopShotRoutine();
+                    return;
+                }
                 _curAttackAnimationIndex = shotCtrl.attackAnimationIndex;
                 // StopAllCoroutines();
                 shotCtrl.StartShotRoutine();
             } else {
-                Debug.Log("Fire");
                 FireColumnAttackController fireColumnAttackController = _curAttack.GetComponent<FireColumnAttackController>();
                 _curAttackAnimationIndex = fireColumnAttackController.attackAnimationIndex;
                 fireColumnAttackController.StartAttack();

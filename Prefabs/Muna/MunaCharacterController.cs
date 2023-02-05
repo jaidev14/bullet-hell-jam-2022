@@ -29,6 +29,9 @@ public class MunaCharacterController : MonoBehaviour
     }
 
     void Update() {
+        if (!LevelManager.Instance.levelActive) {
+            return;
+        }
         if (_isMoving) {
             
             LookAtPosition();

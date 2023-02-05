@@ -51,8 +51,10 @@ namespace TopDownCharacter2D
 
         private void FixedUpdate()
         {
+            // if (!LevelManager.Instance.levelActive) {
+            //     return;
+            // }
             if (_isDead) {
-                ApplyMovement(Vector2.zero);
                 return;
             }
             if (!_isDashing) {
@@ -145,9 +147,9 @@ namespace TopDownCharacter2D
         /// </summary>
         private void OnDeath()
         {
-            _rb.velocity = Vector3.zero;
-            LevelManager.Instance.Die();
             _isDead = true;
+            _rb.velocity = Vector3.zero;
+            LevelManager.Instance.Finish();
         }
 
         /// <summary>

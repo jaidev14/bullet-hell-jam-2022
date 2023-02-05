@@ -9,8 +9,10 @@ public class LevelManager : MonoBehaviour
     private float time = 0;
     private int killedShadows = 0;
 
-    // public FadeController blackScreen = null;
-    private bool levelActive = false;
+    public bool levelActive = false;
+
+    private CameraCinematicController camFX;
+    public FadeController fc;
 
 
     void Awake() {
@@ -18,6 +20,7 @@ public class LevelManager : MonoBehaviour
     }
 
     void Start() {
+        camFX = GetComponent<CameraCinematicController>();
         StartLevel();
     }
 
@@ -33,9 +36,9 @@ public class LevelManager : MonoBehaviour
         StartCoroutine(StartLevelCoroutine());
     }
 
-    public void Die() {
-        Debug.Log("Dying");
-        StartCoroutine(DieCoroutine());
+    public void Finish() {
+        Debug.Log("Finishing");
+        StartCoroutine(FinishCoroutine());
     }
 
     public void Win() {
@@ -50,19 +53,24 @@ public class LevelManager : MonoBehaviour
         levelActive = active;
     }
 
-    IEnumerator DieCoroutine() {
+    IEnumerator FinishCoroutine() {
         levelActive = false;
         GameManager.Instance.time = time;
         GameManager.Instance.killedShadows = killedShadows;
         GameManager.Instance.deaths += 1;
-        // AudioManager.StopMusicAudio();
-        yield return new WaitForSeconds(0.5f);
+        AudioManager.StopMusicAudio();
+        fc.FadeBlack(3f);
+        yield return new WaitForSeconds(3f);
+        Debug.Log("lesgo");
         GameManager.Instance.EndGame();
     }
 
     IEnumerator StartLevelCoroutine() {
-        // AudioManager.StartLevelAudio();
-        yield return new WaitForSeconds(0.5f);
+        AudioManager.StartLevelAudio();
+        camFX.GetComponent<CameraCinematicController>().StartCinematic();
+        fc.FadeTransparent(1f);
+        yield return new WaitForSeconds(5f);
+        camFX.GetComponent<CameraCinematicController>().StopCinematic();
         levelActive = true;
     }
 

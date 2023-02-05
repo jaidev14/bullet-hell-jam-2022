@@ -19,7 +19,7 @@ namespace TopDownController2D.Scripts.TopDownCharacter2D.Animations
         private TopDownDash _dashController = null;
         private HealthSystem _healthSystem;
         private bool _isDead = false;
-        protected Vector3 _initialRotation = new Vector3 (0, 0, 0);
+        public Vector3 _initialRotation = new Vector3 (0, 0, 0);
         
         protected override void Awake()
         {

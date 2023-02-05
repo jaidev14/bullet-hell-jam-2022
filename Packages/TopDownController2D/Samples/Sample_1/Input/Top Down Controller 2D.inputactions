@@ -231,7 +231,7 @@
                 {
                     "name": "",
                     "id": "7ba9f656-8cf7-4772-9b33-f5dbd5d4e286",
-                    "path": "<Keyboard>/#(E)",
+                    "path": "<Keyboard>/space",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
@@ -258,6 +258,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Pause",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3d2f1997-3556-4e4d-85b2-4aa0e77defee",
+                    "path": "<Keyboard>/#(E)",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "Fire",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

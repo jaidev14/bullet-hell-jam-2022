@@ -1,26 +1,57 @@
 using System.Collections;
 using System.Collections.Generic;
-using TopDownCharacter2D;
-using TopDownCharacter2D.Health;
-using TopDownCharacter2D.Attacks.Range;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class FireColumnController : MonoBehaviour
 {
+    private enum AttackType {
+        HOMING,
+        CROSS,
+        STAR
+    }
     [SerializeField] private GameObject _fireParticles;
+    [SerializeField] private AttackType _attackType;
+    private Animator _animator;
+    [SerializeField] private bool _isAttacking;
+    
+    [FormerlySerializedAs("_SetTargetFromTag")]
+    public bool _setTargetFromTag = true;
+    // "Set a unique tag name of target at using SetTargetFromTag."
+    [FormerlySerializedAs("_TargetTagName"), UbhConditionalHide("_setTargetFromTag")]
+    public string _targetTagName = "Player";
+    // "Transform of lock on target."
+    // "It is not necessary if you want to specify target in tag."
+    [FormerlySerializedAs("_TargetTransform")]
+    public Transform _targetTransform;
 
     void Start() {
-        _fireParticles.SetActive(false);
+        _animator = GetComponent<Animator>();
+        StartAttack();
     }
 
-    public void StartFire() {
-        _fireParticles.SetActive(true);
+    void Update() {
+        if (_isAttacking) {
+            if (_targetTransform == null && _setTargetFromTag)
+            {
+                _targetTransform = UbhUtil.GetTransformFromTagName(_targetTagName, false, false, transform);
+            }
+
+            if (_attackType == AttackType.HOMING) {
+                transform.position = new Vector3(_targetTransform.position.x, transform.position.y, _targetTransform.position.z);
+            }
+        }
+    }
+
+    public void StartAttack() {
+        if (!_isAttacking) {
+            _isAttacking = true;
+        }
     }
 
     public void StopFire() {
-        ParticleSystem.EmissionModule em = _fireParticles.GetComponent<ParticleSystem>().emission;
-        em.rateOverTime = 0;
-        _fireParticles.SetActive(false);
-        Destroy(_fireParticles, 1f);
+        _isAttacking = false;
+        Destroy(this.gameObject, 2f);
+        this.gameObject.SetActive(false);
     }
 }

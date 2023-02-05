@@ -66,7 +66,7 @@ public sealed class UbhShotCtrl : UbhMonoBehaviour
     // "Set a callback method after shot routine."
     public UnityEvent m_shotRoutineFinishedCallbackEvents = new UnityEvent();
 
-    private bool m_shooting;
+    public bool m_shooting;
     private UpdateStep m_updateStep;
     private int m_nowIndex;
     private float m_delayTimer;
