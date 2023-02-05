@@ -35,6 +35,9 @@ namespace TopDownCharacter2D.Controllers
 
         protected virtual void Update()
         {
+            if (!LevelManager.Instance.levelActive) {
+                return;
+            }
             HandleAttackDelay();
             HandleDashDelay();
         }

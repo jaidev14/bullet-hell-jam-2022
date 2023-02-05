@@ -12,6 +12,7 @@ public class AudioManager : MonoBehaviour
     [Header("Music Audio")]
     public AudioClip menuMusicClip;             // The menu music 
     public AudioClip levelMusicClip;             // The level music 
+    public AudioClip environmentMusicClip;      // The environment music 
     public AudioClip battleMusicClip;             // The transition music 
 
     [Header("Player Audio")]
@@ -31,10 +32,12 @@ public class AudioManager : MonoBehaviour
     
     [Header("Mixer Groups")]
     public AudioMixerGroup musicGroup;          // The music mixer group
+    public AudioMixerGroup environmentGroup;          // The environment mixer group
     public AudioMixerGroup playerGroup;         // The player mixer group
     public AudioMixerGroup interactionsGroup;   // The interactions mixer group
 
     AudioSource musicSource;        // Reference to the generated music Audio Source
+    AudioSource environmentSource;        // Reference to the generated environment Audio Source
     AudioSource playerSource;       // Reference to the generated player Audio Source
     AudioSource interactionsSource; // Reference to the generated interactions Audio Source
 
@@ -51,11 +54,13 @@ public class AudioManager : MonoBehaviour
 
         // Generate the Audio Source "channels" for the game audio
         musicSource         = gameObject.AddComponent<AudioSource>() as AudioSource;
+        environmentSource   = gameObject.AddComponent<AudioSource>() as AudioSource;
         playerSource        = gameObject.AddComponent<AudioSource>() as AudioSource;
         interactionsSource  = gameObject.AddComponent<AudioSource>() as AudioSource;
 
         // Assign each audio source to its respective mixer group so that it is routed and controlled by the audio mixer
         musicSource.outputAudioMixerGroup           = musicGroup;
+        environmentSource.outputAudioMixerGroup     = environmentGroup;
         playerSource.outputAudioMixerGroup          = playerGroup;
         interactionsSource.outputAudioMixerGroup    = interactionsGroup;
     }
@@ -101,6 +106,7 @@ public class AudioManager : MonoBehaviour
         if (current == null)
             return;
         PlayAudioClip(current.musicSource, current.levelMusicClip, true);
+        PlayAudioClip(current.environmentSource, current.environmentMusicClip, true);
     }
 
     public static void StartBattleAudio() {

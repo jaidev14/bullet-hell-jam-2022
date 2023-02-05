@@ -12,15 +12,18 @@ public class LevelManager : MonoBehaviour
     public bool levelActive = false;
 
     private CameraCinematicController camFX;
-    public FadeController fc;
+    [SerializeField] private FadeController fc;
+    [SerializeField] private DialogueUI dialogueUI;
+    [SerializeField] private GameObject healthUI;
+    [SerializeField] private DialogueObject dialogueObject;
 
 
     void Awake() {
         Instance = this;
+        camFX = GetComponent<CameraCinematicController>();
     }
 
     void Start() {
-        camFX = GetComponent<CameraCinematicController>();
         StartLevel();
     }
 
@@ -33,6 +36,7 @@ public class LevelManager : MonoBehaviour
     public void StartLevel() {
         time = 0f;
         killedShadows = 0;
+        healthUI.SetActive(false);
         StartCoroutine(StartLevelCoroutine());
     }
 
@@ -67,11 +71,16 @@ public class LevelManager : MonoBehaviour
 
     IEnumerator StartLevelCoroutine() {
         AudioManager.StartLevelAudio();
-        camFX.GetComponent<CameraCinematicController>().StartCinematic();
+        camFX.StartCinematic();
         fc.FadeTransparent(1f);
         yield return new WaitForSeconds(5f);
-        camFX.GetComponent<CameraCinematicController>().StopCinematic();
+        camFX.StopCinematic();
+        dialogueUI.ShowDialogue(dialogueObject);
+        while(dialogueUI.IsOpen) {
+            yield return null;
+        }
         levelActive = true;
+        healthUI.SetActive(true);
     }
 
     IEnumerator WinFadeIn() {

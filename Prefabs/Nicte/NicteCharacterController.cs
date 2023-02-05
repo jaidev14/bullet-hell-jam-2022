@@ -26,7 +26,7 @@ namespace TopDownCharacter2D
         private CharacterStatsHandler _stats;
         private Vector2 _dashSpeed = Vector2.zero;
         private HealthSystem _healthSystem;
-        private bool _isDead;
+        public bool _isDead;
         public bool _isHurt;
         [Range(0.0f, 1.0f)]
         public float _speedSlowPercentage = 0.8f;
@@ -51,9 +51,9 @@ namespace TopDownCharacter2D
 
         private void FixedUpdate()
         {
-            // if (!LevelManager.Instance.levelActive) {
-            //     return;
-            // }
+            if (!LevelManager.Instance.levelActive) {
+                return;
+            }
             if (_isDead) {
                 return;
             }

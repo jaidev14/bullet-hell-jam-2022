@@ -51,7 +51,7 @@ namespace TopDownController2D.Scripts.TopDownCharacter2D.Animations
         /// <param name="movementDirection"> The new movement direction </param>
         private void Move(Vector2 movementDirection)
         {
-            if (_isDead || PauseManager.Instance.IsPaused) {
+            if (_isDead || PauseManager.Instance.IsPaused || !LevelManager.Instance.levelActive) {
                 return;
             }
             animator.SetBool(IsWalking, movementDirection.magnitude > .5f);
