@@ -13,8 +13,14 @@ MonoBehaviour:
   m_Name: StartDialogue
   m_EditorClassIdentifier: 
   dialogue:
-  - Hello Nicte
-  - Oh...hi Muna
-  - So you finally came to challenge your destiny
-  - Prepare yourself!
+  - 1Nicte...
+  - 1You know why I'm here. This has to end
+  - 0Things have changed Muna
+  - 1Why!?
+  - 1Come with me, you don't need to suffer anymore, let's run away for real
+  - 0In a world that never seemed real to me, I will take everything or nothing at
+    all cost
+  - '0I don''t want other life, I''d rather extinct. '
+  - 0So if I have to die today, so it be
+  - 1Ok...so it be then
   responses: []

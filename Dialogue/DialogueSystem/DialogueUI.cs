@@ -15,6 +15,7 @@ public class DialogueUI : MonoBehaviour
 
     private TypeWriterEffect typeWriterEffect;
     private ResponseHandler responseHandler;
+    private CharacterPortraitHandler charPortraitHandler;
 
     
     
@@ -22,6 +23,7 @@ public class DialogueUI : MonoBehaviour
     {
         typeWriterEffect = GetComponent<TypeWriterEffect>();
         responseHandler = GetComponent<ResponseHandler>();
+        charPortraitHandler = GetComponent<CharacterPortraitHandler>();
         CloseDialogue();
 
     }
@@ -43,6 +45,9 @@ public class DialogueUI : MonoBehaviour
         for (int i = 0; i < dialogueObject.Dialogue.Length; i++)
         {
             string dialogue = dialogueObject.Dialogue[i];
+            charPortraitHandler.ChangePortrait(int.Parse(dialogue.Substring(0, 1)));
+
+            dialogue = dialogue.Remove(0, 1);
             
             yield return RunTypingEffect(dialogue);
             

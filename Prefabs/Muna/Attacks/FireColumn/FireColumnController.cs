@@ -10,7 +10,7 @@ public class FireColumnController : MonoBehaviour
         CROSS,
         STAR
     }
-    [SerializeField] private GameObject _fireParticles;
+    [SerializeField] private ParticleSystem _fireParticles;
     [SerializeField] private AttackType _attackType;
     private Animator _animator;
     [SerializeField] private bool _isAttacking;
@@ -46,11 +46,15 @@ public class FireColumnController : MonoBehaviour
     public void StartAttack() {
         if (!_isAttacking) {
             _isAttacking = true;
+            var emission = _fireParticles.emission;
+            emission.enabled = true;
         }
     }
 
     public void StopFire() {
         _isAttacking = false;
+        var emission = _fireParticles.emission;
+        emission.enabled = false;
         Destroy(this.gameObject, 2f);
         this.gameObject.SetActive(false);
     }

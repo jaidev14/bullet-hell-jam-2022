@@ -79,6 +79,7 @@ public class LevelManager : MonoBehaviour
         while(dialogueUI.IsOpen) {
             yield return null;
         }
+        yield return new WaitForSeconds(0.3f);
         levelActive = true;
         healthUI.SetActive(true);
     }

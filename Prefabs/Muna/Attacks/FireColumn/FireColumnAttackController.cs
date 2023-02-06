@@ -71,11 +71,11 @@ public class FireColumnAttackController : MonoBehaviour
     public void FinishAttack() {
         _currentSpawnedAttacks = 0;
         _isAttacking = false;
-        if (_fireColumnPool != null && _fireColumnPool.Count >= 1) {
-            foreach(GameObject fireColumn in _fireColumnPool) {
-                Destroy(fireColumn);
-            }
-        }
+        // if (_fireColumnPool != null && _fireColumnPool.Count >= 1) {
+        //     foreach(GameObject fireColumn in _fireColumnPool) {
+        //         Destroy(fireColumn);
+        //     }
+        // }
         _fireColumnPool = new List<GameObject>();
     }
 
